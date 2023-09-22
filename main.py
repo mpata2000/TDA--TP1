@@ -8,19 +8,19 @@ class Participant:
     def __str__(self):
         return f"{self.name}, {self.skills}"
 
-def get_order(skills:list):
+def create_order(captain:Participant):
     """
-    Set order of skills for the best match with the captain
-    @param skills list[int]: list of skills of the captain
+    Create order of the skills
+    @param captain Participant: captain
     @return dict[int, int]: order of the skills
     """
     order = {}
-    for i, skill in enumerate(skills[::-1]):
+    for i, skill in enumerate(captain.skills[::-1]):
         order[skill] = i
 
     return order
 
-def merge_count_inv_order(left, right, order):
+def merge_count_order(left:list[int], right:list[int], order:dict[int, int]):
     """
     Merge two sorted arrays with order that is dict of the values and its expected index
     @param left list[int]: left sorted array
@@ -46,7 +46,7 @@ def merge_count_inv_order(left, right, order):
 
     return merged, count
 
-def merge_sort_count_inversions(skills:list[int], order:dict[int, int]):
+def merge_sort_count(skills:list[int], order:dict[int, int]):
     """
     Merge sort counting inversions
     @param skills list[int]: list of skills
@@ -56,25 +56,25 @@ def merge_sort_count_inversions(skills:list[int], order:dict[int, int]):
         return skills, 0
     
     mid = len(skills) // 2
-    left, left_inv = merge_sort_count_inversions(skills[:mid],order)
-    right, right_inv = merge_sort_count_inversions(skills[mid:],order)
-    merged, merge_inv = merge_count_inv_order(left, right, order)
+    left, left_inv = merge_sort_count(skills[:mid],order)
+    right, right_inv = merge_sort_count(skills[mid:],order)
+    merged, merge_inv = merge_count_order(left, right, order)
     
     return merged, (left_inv + right_inv + merge_inv)
 
-def find_participant_with_least_inversions(participants,captain):
+def find_participant_with_least_inversions(participants:list[Participant],captain:Participant):
     """
     Find participant with the least number of inversions
     @param participants list[Participant]: list of participants
     @return Participant: participant with the least number of inversions
     """
-    order = get_order(captain.skills)
+    order = create_order(captain)
 
     min_inversions = float('inf')
     result = None
 
     for p in participants:
-        _, inversions = merge_sort_count_inversions(p.skills, order)
+        _, inversions = merge_sort_count(p.skills, order)
         if inversions < min_inversions:
             min_inversions = inversions
             result = p
@@ -100,7 +100,7 @@ def get_best_match(participants:list[Participant], captain:Participant):
     @param captain Participant: captain
     @return Participant: best match for the captain
     """
-    order = get_order(captain.skills)
+    order = create_order(captain)
     distance = float('inf')
     result = None
     for p in participants:
