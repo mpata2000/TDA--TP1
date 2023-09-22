@@ -81,35 +81,6 @@ def find_participant_with_least_inversions(participants:list[Participant],captai
 
     return result
 
-def compare_skills_with_best(skills:list[int], order:dict[int, int]):
-    """
-    Compare skills with the best match
-    @param skills list[int]: list of skills
-    @param order dict[int, int]: order of the values
-    @return int: distance between the skills and the best match
-    """
-    distance = 0
-    for i, skill in enumerate(skills):
-        distance += abs(order[skill] - i)
-    return distance
-
-def get_best_match(participants:list[Participant], captain:Participant):
-    """
-    Get best match for the captain
-    @param participants list[Participant]: list of participants
-    @param captain Participant: captain
-    @return Participant: best match for the captain
-    """
-    order = create_order(captain)
-    distance = float('inf')
-    result = None
-    for p in participants:
-        d = compare_skills_with_best(p.skills, order)
-        if d < distance:
-            distance = d
-            result = p
-    return result
-
 def read_participants(path: str):
     """
     Read participants from file
@@ -149,6 +120,37 @@ def main():
 
     x=find_participant_with_least_inversions(participants, captain)
     print(x)
+
+# Other solution but not divide and conquer
+
+def compare_skills_with_best(skills:list[int], order:dict[int, int]):
+    """
+    Compare skills with the best match
+    @param skills list[int]: list of skills
+    @param order dict[int, int]: order of the values
+    @return int: distance between the skills and the best match
+    """
+    distance = 0
+    for i, skill in enumerate(skills):
+        distance += abs(order[skill] - i)
+    return distance
+
+def get_best_match(participants:list[Participant], captain:Participant):
+    """
+    Get best match for the captain
+    @param participants list[Participant]: list of participants
+    @param captain Participant: captain
+    @return Participant: best match for the captain
+    """
+    order = create_order(captain)
+    distance = float('inf')
+    result = None
+    for p in participants:
+        d = compare_skills_with_best(p.skills, order)
+        if d < distance:
+            distance = d
+            result = p
+    return result
 
 if __name__ == "__main__":
     main()
