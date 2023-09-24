@@ -75,7 +75,7 @@ def find_participant_with_least_inversions(participants:list[Participant],captai
 
     for p in participants:
         _, inversions = merge_sort_count(p.skills, order)
-        print(p," con " , inversions)
+        #print(p," con " , inversions)  #Debug line
         if inversions < min_inversions:
             min_inversions = inversions
             result = p
@@ -101,7 +101,6 @@ def read_participants(path: str):
 
 def main():
     args = sys.argv[1:]
-    print(args)
     if len(args) != 2:
         print("No arguments given")
         return
@@ -114,10 +113,12 @@ def main():
         return
     
     captain = participants.pop(captain_index)
-    print(captain)
 
-    x=find_participant_with_least_inversions(participants, captain)
-    print(x)
+    best=find_participant_with_least_inversions(participants, captain)
+    if best is None:
+        print("No best match found")
+        return
+    print(captain.name, ",", best.name)
 
 # Other solution but not divide and conquer, it just works for the one with the least inversions
 
